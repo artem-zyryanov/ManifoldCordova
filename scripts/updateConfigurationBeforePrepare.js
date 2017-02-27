@@ -133,21 +133,11 @@ function processAccessRules(manifest) {
         config.removeElements('.//allow-intent[@hap-rule=\'yes\']');
         config.removeElements('.//allow-navigation[@hap-rule=\'yes\']');
         config.removeElements('.//access[@hap-rule=\'yes\']');
-    
-        // Remove "generic" rules to open external URLs outside the app
-        config.removeElements('.//allow-intent[@href=\'http://*/*\']');
-        config.removeElements('.//allow-intent[@href=\'https://*/*\']');
-        config.removeElements('.//allow-intent[@href=\'*\']');
         
         // determine base rule based on the start_url and the scope
         var baseUrlPattern = manifest.start_url;
         if (manifest.scope && manifest.scope.length) {
-            var parsedScopeUrl = url.parse(manifest.scope);
-            if (parsedScopeUrl.protocol) {
-              baseUrlPattern = manifest.scope;
-            } else {
-              baseUrlPattern = url.resolve(baseUrlPattern, manifest.scope);
-            }
+            baseUrlPattern = manifest.scope;
         }
         
         // If there are no wildcards in the pattern, add '*' at the end
