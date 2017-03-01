@@ -426,97 +426,6 @@ function processDefaultIconsBySize(platform, screenSizes, iconSizes) {
     });
 }
 
-function processiOSIcons(manifestIcons, manifestSplashScreens) {
-    var iconSizes = [
-        "40x40",
-        "80x80",
-        "50x50",
-        "100x100",
-        "57x57",
-        "114x114",
-        "60x60",
-        "120x120",
-        "180x180",
-        "72x72",
-        "144x144",
-        "76x76",
-        "152x152",
-        "29x29",
-        "58x58"
-    ];
-
-    var splashScreenSizes = [
-        "1024x768",
-        "2048x1536",
-        "768x1024",
-        "1536x2048",
-        "640x1136",
-        "2208x1242",
-        "320x480",
-        "640x960",
-        "750x1334",
-        "1242x2208"
-    ];
-
-    processImagesBySize('ios', manifestIcons, splashScreenSizes, iconSizes);
-    processImagesBySize('ios', manifestSplashScreens, splashScreenSizes, []);
-    processDefaultIconsBySize('ios', splashScreenSizes, iconSizes);
-}
-
-function processAndroidIcons(manifestIcons, manifestSplashScreens) {
-    var iconSizeToDensityMap = {
-        36: 'ldpi',
-        48: 'mdpi',
-        72: 'hdpi',
-        96: 'xhdpi',
-        144: 'xxhdpi',
-        192: 'xxxhdpi'
-    };
-
-    var dppxToDensityMap = {
-        0.75:   'ldpi',
-        1:      'mdpi',
-        1.5:    'hdpi',
-        2:      'xhdpi',
-        3:      'xxhdpi',
-        4:      'xxxhdpi'
-    };
-
-    var screenSizeToDensityMap = {
-        "800x480": "land-hdpi",
-        "320x200": "land-ldpi",
-        "480x320": "land-mdpi",
-        "1280x720":"land-xhdpi",
-        "480x800": "port-hdpi",
-        "200x320": "port-ldpi",
-        "320x480": "port-mdpi",
-        "720x1280":"port-xhdpi"
-    };
-    
-    var iconDensities = [];
-    for (var size in iconSizeToDensityMap) {
-        if (iconSizeToDensityMap.hasOwnProperty(size)) {
-          iconDensities.push(iconSizeToDensityMap[size]);
-        }
-    }
-
-    var screenDensities = [];
-    for (var size in screenSizeToDensityMap) {
-        if (screenSizeToDensityMap.hasOwnProperty(size)) {
-          screenDensities.push(screenSizeToDensityMap[size]);
-        }
-    }
-
-    var validFormats = [
-      'png',
-      'image/png'
-    ];
-    
-    processImagesByDensity('android', manifestIcons, screenSizeToDensityMap, iconSizeToDensityMap, dppxToDensityMap, validFormats);   
-    processImagesByDensity('android', manifestSplashScreens, screenSizeToDensityMap, [], dppxToDensityMap, validFormats);   
-    processDefaultIconsByDensity('android', screenDensities, iconDensities);
-}
-
 function processWindowsIcons(manifestIcons, manifestSplashScreens) {
     var iconSizes = [
         "30x30",
@@ -650,8 +559,6 @@ module.exports = function (context) {
         Q.allSettled(pendingTasks).then(function () {
             
           // Configure the icons once all icon files are downloaded
-          processiOSIcons(manifestIcons, manifestSplashScreens);
-          processAndroidIcons(manifestIcons, manifestSplashScreens);
           processWindowsIcons(manifestIcons, manifestSplashScreens);
           processWindowsPhoneIcons(manifestIcons, manifestSplashScreens);
           
